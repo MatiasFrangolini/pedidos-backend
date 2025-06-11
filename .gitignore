@@ -2,6 +2,10 @@
 node_modules/
 src/public/images/
 
+# Add package-lock y package.json
+package-lock.json
+package.json
+
 # Logs
 logs/
 *.log
