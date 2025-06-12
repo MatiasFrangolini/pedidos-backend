@@ -4,7 +4,9 @@ async function getPedidosPorEstado(estado) {
   // Aquí luego harás la consulta real a SQL Server
   // Por ahora, retorna un array simulado
   return [
-    { id: 1, estado: estado || 'En preparacion', descripcion: 'Pedido de ejemplo' }
+    { id: 1, estado: estado || 'En preparacion', descripcion: 'Pedido de ejemplo', date: new Date() },
+    { id: 2, estado: estado || 'En preparacion', descripcion: 'Otro pedido de ejemplo', date: new Date() },
+    { id: 3, estado: estado || 'En preparacion', descripcion: 'Tercer pedido de ejemplo', date: new Date() }
   ];
 }
 

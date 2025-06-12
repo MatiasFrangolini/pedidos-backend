@@ -36,20 +36,31 @@ let wsClients = [];
 wss.on('connection', (ws) => {
   wsClients.push(ws);
   // Enviar mensaje de bienvenida al conectar
-  ws.send(JSON.stringify({ tipo: 'info', mensaje: 'conectado' }));
+  // ws.send(JSON.stringify({ tipo: 'info', mensaje: 'conectado' }));
+  console.log('Nuevo cliente WebSocket conectado');
   ws.on('close', () => {
     wsClients = wsClients.filter(client => client !== ws);
   });
 });
 
-// Publicar "hello world" cada 5 segundos a todos los clientes WebSocket conectados
-/*setInterval(() => {
+// genera  pedidos aleatorios cada 15 segundos
+setInterval(() => {
   wsClients.forEach(ws => {
     if (ws.readyState === WebSocket.OPEN) {
-      ws.send(JSON.stringify({ tipo: 'test', mensaje: 'hello world' }));
+      
+      // Generar pedidos aleatorios
+      const estados = ['Pendiente de preparacion', 'Listo para enviar', 'En camino', 'Entregado', 'Cancelado'];
+      const randomEstado = () => estados[Math.floor(Math.random() * estados.length)];
+      const pedidos = Array.from({ length: 10 }, (_, i) => ({
+        id: i + 1,
+        estado: randomEstado(),
+        descripcion: `Pedido de ejemplo ${i + 1}`,
+        date: new Date()
+      }));
+      ws.send(JSON.stringify({ tipo: 'pedidos_random', pedidos }));
     }
   });
-}, 5000);*/
+}, 15000); // 15 segundos
 
 // Modifica la suscripción a pedidos nuevos:
 queueManager.init({
