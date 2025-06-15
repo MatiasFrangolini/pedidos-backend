@@ -65,7 +65,7 @@ wss.on('connection', (ws) => {
 // Modifica la suscripción a pedidos nuevos:
 queueManager.init({
   onNuevoPedido: async (data) => {
-    console.log('Nuevo pedido recibido:', data);
+    // console.log('Nuevo pedido recibido:', data);
     nuevoPedido = await pedidosRepository.crearPedido(data);
     // Enviar a todos los clientes WebSocket conectados
     wsClients.forEach(ws => {
