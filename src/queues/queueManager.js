@@ -16,10 +16,19 @@ async function connect() {
 }
 
 async function publishCambioEstado(pedidoId, nuevoEstado) {
-  await channel.sendToQueue(
-    QUEUES.CAMBIOS_ESTADO,
-    Buffer.from(JSON.stringify({ pedidoId, nuevoEstado }))
-  );
+  if (!channel) {
+    throw new Error('Channel not initialized. Call connect() first.');
+  }
+  console.log(`Publicando cambio de estado para pedido ${pedidoId}: ${nuevoEstado}`);
+  try {
+    await channel.sendToQueue(
+      QUEUES.CAMBIOS_ESTADO,
+      Buffer.from(JSON.stringify({ pedidoId, nuevoEstado }))
+    );
+  } catch (error) {
+    console.error('Error publicando cambio de estado:', error);
+    throw error;
+  }
 }
 
 function subscribe(queue, handler) {

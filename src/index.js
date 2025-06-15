@@ -22,9 +22,13 @@ app.get('/api/pedidos', async (req, res) => {
 // Endpoint para cambiar el estado de un pedido (ejemplo)
 app.put('/api/pedidos/:id/estado', async (req, res) => {
   const { id } = req.params;
-  const { nuevoEstado } = req.body;
+  // console.log(req.body);
+  // Asegúrate de que el body tenga la forma { estado: "nuevoEstado" }
+  const { estado: nuevoEstado } = req.body;
+  // const { nuevoEstado } = req.body.estado; // Asegúrate de que el cuerpo de la solicitud tenga un campo "estado"
   // Aquí deberías actualizar el estado en tu base de datos y publicar en la cola correspondiente
-  await queueManager.publishEstadoCambio(id, nuevoEstado);
+  const pedido = await pedidosRepository.actualizarEstadoPedido(id, nuevoEstado);
+  await queueManager.publishCambioEstado(id, nuevoEstado);
   res.json({ message: `Pedido ${id} actualizado a estado ${nuevoEstado}` });
 });
 
@@ -65,7 +69,7 @@ wss.on('connection', (ws) => {
 // Modifica la suscripción a pedidos nuevos:
 queueManager.init({
   onNuevoPedido: async (data) => {
-    // console.log('Nuevo pedido recibido:', data);
+    console.log('Nuevo pedido recibido');
     nuevoPedido = await pedidosRepository.crearPedido(data);
     // Enviar a todos los clientes WebSocket conectados
     wsClients.forEach(ws => {

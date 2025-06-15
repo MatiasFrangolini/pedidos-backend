@@ -51,6 +51,10 @@ async function getPedidoById(id) {
 async function actualizarEstadoPedido(id, nuevoEstado) {
   // Aquí luego harás el update real en SQL Server
   // Por ahora, retorna un objeto simulado
+PedidoModel.update(
+    { id_estado: nuevoEstado },
+    { where: { id_pedido: id } }
+  );
   return { id, nuevoEstado };
 }
 
